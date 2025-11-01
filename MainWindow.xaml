@@ -11,7 +11,6 @@
         SnapsToDevicePixels="True">
 
     <Window.Resources>
-        <!-- Palette -->
         <Color x:Key="AccentColor">#0063B1</Color>
         <Color x:Key="CardBackground">#FFFFFFFF</Color>
         <Color x:Key="SubtleText">#FF6B6E73</Color>
@@ -22,7 +21,6 @@
         <SolidColorBrush x:Key="MutedBrush" Color="{StaticResource MutedBackground}"/>
         <SolidColorBrush x:Key="SubtleTextBrush" Color="{StaticResource SubtleText}"/>
 
-        <!-- Card style -->
         <Style x:Key="Card" TargetType="Border">
             <Setter Property="CornerRadius" Value="12"/>
             <Setter Property="Background" Value="{StaticResource CardBrush}"/>
@@ -35,7 +33,6 @@
             </Setter>
         </Style>
 
-        <!-- Button style -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
@@ -69,14 +66,12 @@
             </Setter>
         </Style>
 
-        <!-- Primary filled button -->
         <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Padding" Value="12,6"/>
         </Style>
 
-        <!-- TextBox style -->
         <Style TargetType="TextBox">
             <Setter Property="Background" Value="#FFF"/>
             <Setter Property="BorderBrush" Value="#FFE2E6EA"/>
@@ -110,7 +105,6 @@
             </Setter>
         </Style>
 
-        <!-- ComboBox style (simple) -->
         <Style TargetType="ComboBox">
             <Setter Property="MinHeight" Value="32"/>
             <Setter Property="Padding" Value="8,4"/>
@@ -149,7 +143,6 @@
                                    StaysOpen="False">
                                 <Border Background="White" CornerRadius="8" BorderBrush="#FFE2E6EA" BorderThickness="1" Padding="6" >
                                     <ScrollViewer MaxHeight="240">
-                                        <!-- ItemsHost required for selectable items -->
                                         <StackPanel IsItemsHost="True" />
                                     </ScrollViewer>
                                 </Border>
@@ -169,12 +162,10 @@
             </Setter>
         </Style>
 
-        <!-- DataTemplate used to render selected CategoryEntry -->
         <DataTemplate x:Key="ComboBoxSelectedCategoryTemplate">
             <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
         </DataTemplate>
 
-        <!-- Keep the existing global ComboBox style (visuals) but ensure it uses SelectionBoxItem for general ComboBoxes -->
         <Style x:Key="ComboBoxBaseStyle" TargetType="ComboBox">
             <Setter Property="MinHeight" Value="32"/>
             <Setter Property="Padding" Value="8,4"/>
@@ -188,7 +179,6 @@
                         <Grid>
                             <Border x:Name="Bd" CornerRadius="8" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                                 <DockPanel Margin="6,0">
-                                    <!-- Use SelectionBoxItem for general ComboBoxes so DisplayMemberPath works -->
                                     <ContentPresenter x:Name="ContentSite"
                                               Content="{TemplateBinding SelectionBoxItem}"
                                               ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
@@ -214,7 +204,6 @@
                                    StaysOpen="False">
                                 <Border Background="White" CornerRadius="8" BorderBrush="#FFE2E6EA" BorderThickness="1" Padding="6" >
                                     <ScrollViewer MaxHeight="240">
-                                        <!-- ItemsHost required for selectable items -->
                                         <StackPanel IsItemsHost="True" />
                                     </ScrollViewer>
                                 </Border>
@@ -234,7 +223,6 @@
             </Setter>
         </Style>
 
-        <!-- Specific style for CategoryComboBox: uses SelectedItem bound to DataTemplate that shows only Name -->
         <Style x:Key="CategoryComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -242,7 +230,6 @@
                         <Grid>
                             <Border x:Name="Bd" CornerRadius="8" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
                                 <DockPanel Margin="6,0">
-                                    <!-- Show SelectedItem via DataTemplate that binds to Name -->
                                     <ContentPresenter x:Name="ContentSite"
                                               Content="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
                                               ContentTemplate="{StaticResource ComboBoxSelectedCategoryTemplate}"
@@ -287,7 +274,6 @@
             </Setter>
         </Style>
 
-        <!-- ProgressBar (rounded) -->
         <Style TargetType="ProgressBar">
             <Setter Property="Height" Value="14"/>
             <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
@@ -302,7 +288,6 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsIndeterminate" Value="True">
-                                <!-- keep default -->
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -310,7 +295,6 @@
             </Setter>
         </Style>
 
-        <!-- DataGrid style -->
         <Style TargetType="DataGrid">
             <Setter Property="RowBackground" Value="White"/>
             <Setter Property="AlternatingRowBackground" Value="#FFF7F9FB"/>
@@ -333,18 +317,12 @@
     <Grid Margin="18">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- header -->
             <RowDefinition Height="Auto"/>
-            <!-- inputs card -->
             <RowDefinition Height="Auto"/>
-            <!-- actions + summary -->
             <RowDefinition Height="Auto"/>
-            <!-- toolbar -->
             <RowDefinition/>
-            <!-- datagrid -->
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <DockPanel Grid.Row="0" Margin="0,0,0,8" LastChildFill="True">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <StackPanel>
@@ -352,7 +330,6 @@
                 </StackPanel>
             </StackPanel>
 
-            <!-- Month navigation on right -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="6,0,0,0">
                 <Button x:Name="PrevMonthButton" Content="◀" Width="34" Height="34" Click="PrevMonthButton_Click" Margin="0,0,8,0"/>
                 <TextBlock x:Name="SelectedMonthTextBlock" VerticalAlignment="Center" FontWeight="Bold" Margin="6,0" />
@@ -360,7 +337,6 @@
             </StackPanel>
         </DockPanel>
 
-        <!-- Inputs Card -->
         <Border Grid.Row="1" Style="{StaticResource Card}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -375,7 +351,6 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Left column: form -->
                 <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" Height="196" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
                         <TextBlock Text="Mėnesio pajamos:" Style="{StaticResource LabelText}" Width="110"/>
@@ -395,7 +370,6 @@
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                         <TextBlock Text="Kategorija:" Style="{StaticResource LabelText}" Width="110"/>
-                        <!-- Update the CategoryComboBox element so it is explicit about display -->
                         <ComboBox x:Name="CategoryComboBox" Width="240" IsEditable="False" DisplayMemberPath="Name" Style="{StaticResource CategoryComboBoxStyle}" />
                     </StackPanel>
 
@@ -409,7 +383,6 @@
                     </StackPanel>
                 </StackPanel>
 
-                <!-- Right column: description + add/import/export -->
                 <StackPanel Grid.Column="1" Margin="16,0,0,0">
                     <TextBlock Text="Aprašymas:" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
                     <TextBox x:Name="DescriptionTextBox" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
@@ -424,7 +397,6 @@
             </Grid>
         </Border>
 
-        <!-- Summary Card -->
         <Border Grid.Row="2" Style="{StaticResource Card}" Padding="10" Margin="8,8,10,8" MinHeight="72">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -433,7 +405,6 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- 50% (Needs) -->
                 <StackPanel Grid.Column="0" Margin="6,2" VerticalAlignment="Center">
                     <TextBlock Text="50% – Reikmės" FontWeight="SemiBold" FontSize="12"/>
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,6" VerticalAlignment="Center">
@@ -444,7 +415,6 @@
                     <ProgressBar x:Name="ProgressBar50" Height="10" />
                 </StackPanel>
 
-                <!-- 30% (Wants) -->
                 <StackPanel Grid.Column="1" Margin="6,2" VerticalAlignment="Center">
                     <TextBlock Text="30% – Laisvalaikis" FontWeight="SemiBold" FontSize="12"/>
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,6" VerticalAlignment="Center">
@@ -455,7 +425,6 @@
                     <ProgressBar x:Name="ProgressBar30" Height="10" />
                 </StackPanel>
 
-                <!-- 20% (Savings) -->
                 <StackPanel Grid.Column="2" Margin="6,2" VerticalAlignment="Center">
                     <TextBlock Text="20% – Taupymas" FontWeight="SemiBold" FontSize="12"/>
                     <StackPanel Orientation="Horizontal" Margin="0,6,0,6" VerticalAlignment="Center">
@@ -468,14 +437,12 @@
             </Grid>
         </Border>
 
-        <!-- Toolbar -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4,8">
             <Button x:Name="EditButton" Content="Redaguoti" Width="110" Height="36" MinWidth="80" Padding="8,6" Margin="0,0,8,0" Click="EditButton_Click"/>
             <Button x:Name="DeleteButton" Content="Ištrinti" Width="110" Height="36" MinWidth="80" Padding="8,6" Click="DeleteButton_Click"/>
             <Button x:Name="ReportsButton" Content="Ataskaitos" Width="130" Height="36" MinWidth="90" Padding="8,6" Margin="12,0,0,0" Click="ReportsButton_Click"/>
         </StackPanel>
 
-        <!-- DataGrid -->
         <Border Grid.Row="4" Style="{StaticResource Card}" Padding="0" Margin="8,12,8,8">
             <DataGrid x:Name="ExpensesDataGrid"
                       AutoGenerateColumns="False"
