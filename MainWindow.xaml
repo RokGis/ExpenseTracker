@@ -1,0 +1,503 @@
+﻿<Window x:Class="ExpenceTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExpenceTracker"
+        mc:Ignorable="d"
+        Title="ExpenceTracker" Height="640" Width="1000"
+        Background="#FFF6F7F9"
+        FontFamily="Segoe UI Variable"
+        SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <!-- Palette -->
+        <Color x:Key="AccentColor">#0063B1</Color>
+        <Color x:Key="CardBackground">#FFFFFFFF</Color>
+        <Color x:Key="SubtleText">#FF6B6E73</Color>
+        <Color x:Key="MutedBackground">#FFF1F3F5</Color>
+
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+        <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardBackground}"/>
+        <SolidColorBrush x:Key="MutedBrush" Color="{StaticResource MutedBackground}"/>
+        <SolidColorBrush x:Key="SubtleTextBrush" Color="{StaticResource SubtleText}"/>
+
+        <!-- Card style -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#22000000" BlurRadius="12" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Button style -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#FFEFF6FB"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#FFDCEAF9"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary filled button -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="12,6"/>
+        </Style>
+
+        <!-- TextBox style -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#FFF"/>
+            <Setter Property="BorderBrush" Value="#FFE2E6EA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="2"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                <Setter TargetName="Border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#1A0063B1" BlurRadius="8" ShadowDepth="0"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBox style (simple) -->
+        <Style TargetType="ComboBox">
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderBrush" Value="#FFE2E6EA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="IsEditable" Value="False"/>
+            <Setter Property="TextSearch.TextPath" Value="Name"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="Bd" CornerRadius="8" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <DockPanel Margin="6,0">
+                                    <ContentPresenter x:Name="ContentSite"
+                                                      Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      VerticalAlignment="Center"
+                                                      Margin="4,0"/>
+                                    <ToggleButton x:Name="ToggleButton"
+                                                  DockPanel.Dock="Right"
+                                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  Focusable="False"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Width="34" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="" Foreground="{StaticResource SubtleTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </ToggleButton>
+                                </DockPanel>
+                            </Border>
+
+                            <Popup x:Name="PART_Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   PopupAnimation="Fade"
+                                   StaysOpen="False">
+                                <Border Background="White" CornerRadius="8" BorderBrush="#FFE2E6EA" BorderThickness="1" Padding="6" >
+                                    <ScrollViewer MaxHeight="240">
+                                        <!-- ItemsHost required for selectable items -->
+                                        <StackPanel IsItemsHost="True" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="PART_Popup" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataTemplate used to render selected CategoryEntry -->
+        <DataTemplate x:Key="ComboBoxSelectedCategoryTemplate">
+            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+        </DataTemplate>
+
+        <!-- Keep the existing global ComboBox style (visuals) but ensure it uses SelectionBoxItem for general ComboBoxes -->
+        <Style x:Key="ComboBoxBaseStyle" TargetType="ComboBox">
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="BorderBrush" Value="#FFE2E6EA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="IsEditable" Value="False"/>
+            <Setter Property="TextSearch.TextPath" Value="Name"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="Bd" CornerRadius="8" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <DockPanel Margin="6,0">
+                                    <!-- Use SelectionBoxItem for general ComboBoxes so DisplayMemberPath works -->
+                                    <ContentPresenter x:Name="ContentSite"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              VerticalAlignment="Center"
+                                              Margin="4,0"/>
+                                    <ToggleButton x:Name="ToggleButton"
+                                                  DockPanel.Dock="Right"
+                                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  Focusable="False"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Width="34" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="" Foreground="{StaticResource SubtleTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </ToggleButton>
+                                </DockPanel>
+                            </Border>
+
+                            <Popup x:Name="PART_Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   PopupAnimation="Fade"
+                                   StaysOpen="False">
+                                <Border Background="White" CornerRadius="8" BorderBrush="#FFE2E6EA" BorderThickness="1" Padding="6" >
+                                    <ScrollViewer MaxHeight="240">
+                                        <!-- ItemsHost required for selectable items -->
+                                        <StackPanel IsItemsHost="True" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="PART_Popup" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Specific style for CategoryComboBox: uses SelectedItem bound to DataTemplate that shows only Name -->
+        <Style x:Key="CategoryComboBoxStyle" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxBaseStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="Bd" CornerRadius="8" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <DockPanel Margin="6,0">
+                                    <!-- Show SelectedItem via DataTemplate that binds to Name -->
+                                    <ContentPresenter x:Name="ContentSite"
+                                              Content="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                              ContentTemplate="{StaticResource ComboBoxSelectedCategoryTemplate}"
+                                              VerticalAlignment="Center"
+                                              Margin="4,0"/>
+                                    <ToggleButton x:Name="ToggleButton"
+                                                  DockPanel.Dock="Right"
+                                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  Focusable="False"
+                                                  Background="Transparent"
+                                                  BorderThickness="0"
+                                                  Width="34" Height="28" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="" Foreground="{StaticResource SubtleTextBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </ToggleButton>
+                                </DockPanel>
+                            </Border>
+
+                            <Popup x:Name="PART_Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   PopupAnimation="Fade"
+                                   StaysOpen="False">
+                                <Border Background="White" CornerRadius="8" BorderBrush="#FFE2E6EA" BorderThickness="1" Padding="6" >
+                                    <ScrollViewer MaxHeight="240">
+                                        <StackPanel IsItemsHost="True" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="PART_Popup" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ProgressBar (rounded) -->
+        <Style TargetType="ProgressBar">
+            <Setter Property="Height" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border CornerRadius="8" Background="#FFEFEFF1" Height="{TemplateBinding Height}">
+                            <Grid>
+                                <Rectangle x:Name="PART_Track" Fill="#FFEFEFF1" RadiusX="8" RadiusY="8"/>
+                                <Rectangle x:Name="PART_Indicator" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" RadiusX="8" RadiusY="8" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsIndeterminate" Value="True">
+                                <!-- keep default -->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataGrid style -->
+        <Style TargetType="DataGrid">
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#FFF7F9FB"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="BorderBrush" Value="#FFE2E6EA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ColumnHeaderHeight" Value="40"/>
+            <Setter Property="RowHeight" Value="36"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#FFF0F2F4"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="LabelText">
+            <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- header -->
+            <RowDefinition Height="Auto"/>
+            <!-- inputs card -->
+            <RowDefinition Height="Auto"/>
+            <!-- actions + summary -->
+            <RowDefinition Height="Auto"/>
+            <!-- toolbar -->
+            <RowDefinition/>
+            <!-- datagrid -->
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0" Margin="0,0,0,8" LastChildFill="True">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock FontSize="18" FontWeight="Bold"><Run Text="I"/><Run Language="lt-lt" Text="šlaidų sekiklis"/></TextBlock>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Month navigation on right -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center" Margin="6,0,0,0">
+                <Button x:Name="PrevMonthButton" Content="◀" Width="34" Height="34" Click="PrevMonthButton_Click" Margin="0,0,8,0"/>
+                <TextBlock x:Name="SelectedMonthTextBlock" VerticalAlignment="Center" FontWeight="Bold" Margin="6,0" />
+                <Button x:Name="NextMonthButton" Content="▶" Width="34" Height="34" Click="NextMonthButton_Click" Margin="8,0,0,0"/>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Inputs Card -->
+        <Border Grid.Row="1" Style="{StaticResource Card}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Left column: form -->
+                <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" Height="196" >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                        <TextBlock Text="Mėnesio pajamos:" Style="{StaticResource LabelText}" Width="110"/>
+                        <TextBox x:Name="IncomeTextBox" Width="150" />
+                        <Button x:Name="SetIncomeButton" Content="Nustatyti" Style="{StaticResource PrimaryButton}" Width="100" Margin="8,0,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="Data:" Style="{StaticResource LabelText}" Width="110"/>
+                        <DatePicker x:Name="DatePicker" Width="240"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="Suma:" Style="{StaticResource LabelText}" Width="110"/>
+                        <TextBox x:Name="AmountTextBox" Width="240"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="Kategorija:" Style="{StaticResource LabelText}" Width="110"/>
+                        <!-- Update the CategoryComboBox element so it is explicit about display -->
+                        <ComboBox x:Name="CategoryComboBox" Width="240" IsEditable="False" DisplayMemberPath="Name" Style="{StaticResource CategoryComboBoxStyle}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <TextBlock Text="Biudžeto dalis:" Style="{StaticResource LabelText}" Width="110"/>
+                        <ComboBox x:Name="BudgetBucketComboBox" Width="240">
+                            <ComboBoxItem Tag="50" Content="50% - Reikmės" />
+                            <ComboBoxItem Tag="30" Content="30% - Laisvalaikis" />
+                            <ComboBoxItem Tag="20" Content="20% - Taupymas" />
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Right column: description + add/import/export -->
+                <StackPanel Grid.Column="1" Margin="16,0,0,0">
+                    <TextBlock Text="Aprašymas:" Style="{StaticResource LabelText}" Margin="0,0,0,6"/>
+                    <TextBox x:Name="DescriptionTextBox" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,12,0,0">
+                        <Button x:Name="AddButton" Content="Pridėti" Style="{StaticResource PrimaryButton}" Width="110" Click="AddButton_Click"/>
+                        <Button x:Name="ImportButton" Content="Importuoti CSV" Width="140" Height="36" Margin="10,0,0,0" Click="ImportButton_Click"/>
+                        <Button x:Name="ExportButton" Content="Eksportuoti CSV" Width="140" Height="36" Margin="8,0,0,0" Click="ExportButton_Click"/>
+                        <TextBlock x:Name="IncomeInfoTextBlock" Margin="14,8,0,0" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Summary Card -->
+        <Border Grid.Row="2" Style="{StaticResource Card}" Padding="10" Margin="8,8,10,8" MinHeight="72">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- 50% (Needs) -->
+                <StackPanel Grid.Column="0" Margin="6,2" VerticalAlignment="Center">
+                    <TextBlock Text="50% – Reikmės" FontWeight="SemiBold" FontSize="12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,6" VerticalAlignment="Center">
+                        <TextBlock x:Name="Budget50TextBlock" FontWeight="Bold" FontSize="13"/>
+                        <TextBlock Text="  •  Likutis: " Foreground="{StaticResource SubtleTextBrush}" FontSize="11" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="Remaining50TextBlock" FontSize="13" FontWeight="SemiBold" Margin="4,0,0,0"/>
+                    </StackPanel>
+                    <ProgressBar x:Name="ProgressBar50" Height="10" />
+                </StackPanel>
+
+                <!-- 30% (Wants) -->
+                <StackPanel Grid.Column="1" Margin="6,2" VerticalAlignment="Center">
+                    <TextBlock Text="30% – Laisvalaikis" FontWeight="SemiBold" FontSize="12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,6" VerticalAlignment="Center">
+                        <TextBlock x:Name="Budget30TextBlock" FontWeight="Bold" FontSize="13"/>
+                        <TextBlock Text="  •  Likutis: " Foreground="{StaticResource SubtleTextBrush}" FontSize="11" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="Remaining30TextBlock" FontSize="13" FontWeight="SemiBold" Margin="4,0,0,0"/>
+                    </StackPanel>
+                    <ProgressBar x:Name="ProgressBar30" Height="10" />
+                </StackPanel>
+
+                <!-- 20% (Savings) -->
+                <StackPanel Grid.Column="2" Margin="6,2" VerticalAlignment="Center">
+                    <TextBlock Text="20% – Taupymas" FontWeight="SemiBold" FontSize="12"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,6" VerticalAlignment="Center">
+                        <TextBlock x:Name="Budget20TextBlock" FontWeight="Bold" FontSize="13"/>
+                        <TextBlock Text="  •  Likutis: " Foreground="{StaticResource SubtleTextBrush}" FontSize="11" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="Remaining20TextBlock" FontSize="13" FontWeight="SemiBold" Margin="4,0,0,0"/>
+                    </StackPanel>
+                    <ProgressBar x:Name="ProgressBar20" Height="10" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="4,8">
+            <Button x:Name="EditButton" Content="Redaguoti" Width="110" Height="36" MinWidth="80" Padding="8,6" Margin="0,0,8,0" Click="EditButton_Click"/>
+            <Button x:Name="DeleteButton" Content="Ištrinti" Width="110" Height="36" MinWidth="80" Padding="8,6" Click="DeleteButton_Click"/>
+            <Button x:Name="ReportsButton" Content="Ataskaitos" Width="130" Height="36" MinWidth="90" Padding="8,6" Margin="12,0,0,0" Click="ReportsButton_Click"/>
+        </StackPanel>
+
+        <!-- DataGrid -->
+        <Border Grid.Row="4" Style="{StaticResource Card}" Padding="0" Margin="8,12,8,8">
+            <DataGrid x:Name="ExpensesDataGrid"
+                      AutoGenerateColumns="False"
+                      MouseDoubleClick="ExpensesDataGrid_MouseDoubleClick"
+                      HeadersVisibility="Column"
+                      Margin="0"
+                      CanUserAddRows="False">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Redaguoti" Click="EditMenuItem_Click"/>
+                        <MenuItem Header="Ištrinti" Click="DeleteMenuItem_Click"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Data" Binding="{Binding Date, StringFormat=d}" Width="120"/>
+                    <DataGridTextColumn Header="Suma" Binding="{Binding Amount, StringFormat=N2}" Width="110"/>
+                    <DataGridTextColumn Header="Kategorija" Binding="{Binding Category}" Width="180"/>
+                    <DataGridTextColumn Header="Biudžetas" Binding="{Binding BudgetBucket}" Width="140"/>
+                    <DataGridTextColumn Header="Aprašymas" Binding="{Binding Description}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</Window>
